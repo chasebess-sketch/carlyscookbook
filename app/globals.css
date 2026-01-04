@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Small sane defaults */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+html {
+  background: #0b0b0b;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+body {
+  background: #0b0b0b;
+  overflow-x: hidden;
+}
+
+/* ---------- ROUTE TRANSITION (page flip) ---------- */
+.rt {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99999;
+  opacity: 0;
+}
+
+/* dark fade layer */
+.rt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #0b0b0b;
+  opacity: 0;
+}
+
+/* page "flip" sheet from the right */
+.rt::after {
+  content: "";
+  position: absolute;
+  top: -10%;
+  right: -60%;
+  width: 120%;
+  height: 120%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.00) 0%,
+    rgba(255, 255, 255, 0.15) 35%,
+    rgba(255, 255, 255, 0.35) 55%,
+    rgba(255, 255, 255, 0.15) 75%,
+    rgba(255, 255, 255, 0.00) 100%
+  );
+  transform-origin: right center;
+  transform: rotateY(0deg);
+  opacity: 0;
+}
+
+/* play */
+.rt.rt-play {
+  opacity: 1;
+}
+
+.rt.rt-play::before {
+  animation: rtFade 520ms ease-in-out forwards;
+}
+
+.rt.rt-play::after {
+  animation: rtFlip 520ms ease-in-out forwards;
+}
+
+@keyframes rtFade {
+  0%   { opacity: 0; }
+  30%  { opacity: 0.70; }
+  70%  { opacity: 0.70; }
+  100% { opacity: 0; }
+}
+
+@keyframes rtFlip {
+  0% {
+    opacity: 0;
+    transform: translateX(0) rotateY(0deg);
+  }
+  25% {
+    opacity: 1;
+    transform: translateX(-15%) rotateY(-35deg);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(-55%) rotateY(-65deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-70%) rotateY(-80deg);
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .rt, .rt::before, .rt::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
